@@ -15,6 +15,44 @@ namespace LabWork6
         public Form1()
         {
             InitializeComponent();
+
+            // Инициализация графиков
+            Fx sin = new Fx();
+            Fx cos = new Fx();
+            Fx myGrap = new Fx();
+
+            // Меняем их цвет
+            sin.LineColor = Color.Blue;
+            cos.LineColor = Color.Red;
+            myGrap.LineColor = Color.Green;
+
+            // Меняем их ширину
+            sin.LineWidth = 1;
+            cos.LineWidth = 2;
+            myGrap.LineWidth = 3;
+
+            // График синуса
+            for (float x = -10; x < 10; x += 0.5f)
+            {
+                sin.AddPoint(x, (float)Math.Sin(x));
+            }
+
+            // График косинуса
+            for (float x = -10; x < 10; x += 0.5f)
+            {
+                cos.AddPoint(x, (float)Math.Cos(x));
+            }
+
+            // График параболы
+            for (float x = -10; x < 10; x += 0.5f)
+            {
+                myGrap.AddPoint(x, (float)(x * x));
+            }
+
+            // Добавляем графики на экран
+            grapher.AddFunction(sin);
+            grapher.AddFunction(cos);
+            grapher.AddFunction(myGrap);
         }
     }
 }
