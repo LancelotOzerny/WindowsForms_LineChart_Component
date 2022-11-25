@@ -13,9 +13,14 @@ namespace LabWork6
     [Serializable]
     public partial class LineChart : UserControl
     {
+        // Отрисовка (функции + таймер отрисовки)
         private List<Fx> _functions = new List<Fx>();
         private Timer _timer = new Timer();
+
+
+        // Средства отрисовки
         private Pen _defaultPencil = new Pen(Color.DarkGray, 2);
+
 
         // Отступы
         private float _margin = 20;
@@ -24,15 +29,6 @@ namespace LabWork6
         // Высота и ширина области рисования
         private float _widthArea;
         private float _heightArea;
-
-
-        /// <summary>
-        /// Совйство, которое позоляет задать или получить значение массива функций
-        /// </summary>
-      /*  public List<Fx> Functions { 
-            get => _functions; 
-            set => _functions = value; 
-        }*/
 
 
         /// <summary>
@@ -57,15 +53,15 @@ namespace LabWork6
         {
             InitializeComponent();
 
-            // Вычисление ширины и высоты экрана рисования
-            _widthArea = (float)Width - _margin * 2;
-            _heightArea = (float)Height - _margin * 2;
-
             _timer.Interval = 100;
             _timer.Tick += (delegate { Invalidate(); });
             _timer.Start();
         }
 
+        /// <summary>
+        /// Метод, который позволяет добавить к отрисовке какой-либо график
+        /// </summary>
+        /// <param name="function">функция для отрисовки</param>
         public void AddFunction(Fx function)
         {
             _functions.Add(function);
@@ -83,6 +79,12 @@ namespace LabWork6
             {
                 if (_functions.Count > 0)
                 {
+                    listBox1.Items.Clear();
+
+                    // Вычисление ширины и высоты экрана рисования
+                    _widthArea = (float)Width - _margin * 2;
+                    _heightArea = (float)Height - _margin * 2;
+
                     float offsetX = 0;
                     float offsetY = 0;
 
@@ -91,6 +93,9 @@ namespace LabWork6
 
                     float minY = _functions.Min(y => y.GetMinY());
                     float maxY = _functions.Max(y => y.GetMaxY());
+
+                    listBox1.Items.Add($"Width: {Width}");
+                    listBox1.Items.Add($"_widthArea: {_widthArea}");
 
                     float _stepX = _widthArea / (maxX - minX);
                     float _stepY = _heightArea / (maxY - minY);

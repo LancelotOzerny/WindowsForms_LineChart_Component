@@ -32,19 +32,19 @@ namespace LabWork6
             myGrap.LineWidth = 3;
 
             // График синуса
-            for (float x = -10; x < 10; x += 0.5f)
+            for (float x = -10; x <= 10; x += 0.2f)
             {
                 sin.AddPoint(x, (float)Math.Sin(x));
             }
 
             // График косинуса
-            for (float x = -10; x < 10; x += 0.5f)
+            for (float x = -10; x <= 10; x += 0.2f)
             {
                 cos.AddPoint(x, (float)Math.Cos(x));
             }
 
             // График параболы
-            for (float x = -10; x < 10; x += 0.5f)
+            for (float x = -4; x <= 4; x += 0.1f)
             {
                 myGrap.AddPoint(x, (float)(x * x));
             }
