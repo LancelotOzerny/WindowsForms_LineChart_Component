@@ -22,6 +22,13 @@ namespace LabWork6
         private Pen _defaultPencil = new Pen(Color.DarkGray, 2);
 
 
+        // Подписи осей
+        private string _axisXName = "X";
+        private string _axisYName = "Y";
+        private Label _labelXName = new Label();
+        private Label _labelYName = new Label();
+
+
         // Отступы
         private float _margin = 20;
 
@@ -30,6 +37,31 @@ namespace LabWork6
         private float _widthArea;
         private float _heightArea;
 
+
+        // Начало и конец интервалов 
+        private PointF _startValues = new PointF(-1, -1);
+        private PointF _endValues = new PointF(1, 1);
+
+
+
+
+
+
+
+
+
+
+        public string AxisXName
+        {
+            get => _axisXName;
+            set => _axisXName = value;
+        }
+
+        public string AxisYName
+        {
+            get => _axisYName;
+            set => _axisYName = value;
+        }
 
         /// <summary>
         /// Свойство, которое позволяет получить или задать отступы по бокам для графика
@@ -46,6 +78,15 @@ namespace LabWork6
             }
         }
 
+
+
+
+
+
+
+
+
+
         /// <summary>
         /// Конструктор по умолчанию, который задает начальные значения и вычисляет область рисования
         /// </summary>
@@ -56,7 +97,24 @@ namespace LabWork6
             _timer.Interval = 100;
             _timer.Tick += (delegate { Invalidate(); });
             _timer.Start();
+
+            Controls.Add(_labelXName);
+            Controls.Add(_labelYName);
+
+            this.SetStyle(
+                ControlStyles.UserPaint |
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.OptimizedDoubleBuffer,
+                true
+            );
         }
+
+
+
+
+
+
+
 
         /// <summary>
         /// Метод, который позволяет добавить к отрисовке какой-либо график
@@ -71,96 +129,113 @@ namespace LabWork6
         {
             Graphics canvas = e.Graphics;
 
-            if (_functions.Count == 0 || _functions.Max(x => x.Points.Count) == 0)
+            // Вычисление ширины и высоты экрана рисования
+            _widthArea = (float)Width - _margin * 2;
+            _heightArea = (float)Height - _margin * 2;
+
+            PointF offset = new PointF(0, 0);
+
+            bool intervalChanged = false;
+
+            for (int i = 0; i < _functions.Count; ++i)
             {
-                DrawZeroAxis(canvas);
+                if (!_functions[i].IsEmpty)
+                {
+                    if (!intervalChanged)
+                    {
+                        _startValues.X = _functions[i].GetMinX();
+                        _startValues.Y = _functions[i].GetMinY();
+
+                        _endValues.X = _functions[i].GetMaxX();
+                        _endValues.Y = _functions[i].GetMaxY();
+
+                        intervalChanged = true;
+                        continue;
+                    }
+
+                    _startValues.X = _startValues.X < _functions[i].GetMinX() ? _startValues.X : _functions[i].GetMinX();
+                    _endValues.X = _endValues.X > _functions[i].GetMaxX() ? _endValues.X : _functions[i].GetMaxX();
+
+                    _startValues.Y = _startValues.Y < _functions[i].GetMinY() ? _startValues.Y : _functions[i].GetMinY();
+                    _endValues.Y = _endValues.Y > _functions[i].GetMaxY() ? _endValues.Y : _functions[i].GetMaxY();
+                }
             }
-            else
+
+            float _stepX = Math.Abs(_widthArea / (_endValues.X - _startValues.X));
+            float _stepY = Math.Abs(_heightArea / (_endValues.Y - _startValues.Y));
+
+            
+            offset.X = _startValues.X < 0 ? Math.Abs(_startValues.X) : -_startValues.X;
+            offset.Y = _startValues.Y < 0 ? Math.Abs(_startValues.Y) : _startValues.Y;
+
+
+            listBox1.Items.Clear();
+            listBox1.Items.Add($"min X = {_startValues.X}");
+            listBox1.Items.Add($"max X = {_endValues.X}");
+            listBox1.Items.Add($"");
+            listBox1.Items.Add($"min Y = {_startValues.Y}");
+            listBox1.Items.Add($"max Y = {_endValues.Y}");
+            listBox1.Items.Add($"");
+            listBox1.Items.Add($"step X = {_stepX}");
+            listBox1.Items.Add($"step Y = {_stepY}");
+
+            // ось X
+            if (_startValues.Y <= 0)
+            {
+                canvas.DrawLine(
+                    _defaultPencil,
+                    _margin,
+                    Height - _margin - offset.Y * _stepY,
+                    Width - _margin,
+                    Height - _margin - offset.Y * _stepY
+                );
+            }
+
+            // ось Y
+            if (_startValues.X <= 0)
+            {
+                canvas.DrawLine(
+                    _defaultPencil,
+                    _margin + offset.X * _stepX,
+                    _margin,
+                    _margin + offset.X * _stepX,
+                    Height - _margin
+                );
+            }
+            
+            // Установка Label-ов
+            _labelXName.Location = new Point(
+                (int)(Width - _margin - _labelXName.Text.Length * _labelXName.Font.Size),
+                (int)(Height - _margin - offset.Y * _stepY - _labelXName.Font.Size * 2)
+            );
+            _labelXName.Text = _axisXName;
+
+            _labelYName.Location = new Point(
+                (int)(_margin + offset.X * _stepX + _labelYName.Font.Size * 2),
+                (int)(_margin)
+            );
+            _labelYName.Text = _axisYName;
+
+
+            if (_functions.Count != 0 && _functions.Max(x => x.Points.Count) != 0)
             {
                 if (_functions.Count > 0)
                 {
-                    listBox1.Items.Clear();
-
-                    // Вычисление ширины и высоты экрана рисования
-                    _widthArea = (float)Width - _margin * 2;
-                    _heightArea = (float)Height - _margin * 2;
-
-                    float offsetX = 0;
-                    float offsetY = 0;
-
-                    float minX = _functions.Min(x => x.GetMinX());
-                    float maxX = _functions.Max(x => x.GetMaxX());
-
-                    float minY = _functions.Min(y => y.GetMinY());
-                    float maxY = _functions.Max(y => y.GetMaxY());
-
-                    listBox1.Items.Add($"Width: {Width}");
-                    listBox1.Items.Add($"_widthArea: {_widthArea}");
-
-                    float _stepX = _widthArea / (maxX - minX);
-                    float _stepY = _heightArea / (maxY - minY);
-
-                    offsetY = minY < 0 ? Math.Abs(minY) : 0;
-                    offsetX = minX < 0 ? Math.Abs(minX) : 0;
-
-                    // ось X
-                    canvas.DrawLine(
-                        _defaultPencil,
-                        _margin,
-                        Height - _margin - offsetY * _stepY,
-                        Width - _margin,
-                        Height - _margin - offsetY * _stepY
-                    );
-
-                    // ось Y
-                    canvas.DrawLine(
-                        _defaultPencil,
-                        _margin + offsetX * _stepX,
-                        _margin,
-                        _margin + offsetX * _stepX,
-                        Height - _margin
-                    );
-
                     foreach (Fx func in _functions)
                     {
                         for (int i = 0; i < func.Points.Count - 1; ++i)
                         {
                             canvas.DrawLine(
                                 func.Pencil,
-                                _margin + (func.Points[i].X + offsetX) * _stepX,
-                                _margin + _heightArea - (func.Points[i].Y + offsetY) * _stepY,
-                                _margin + (func.Points[i + 1].X + offsetX) * _stepX,
-                                _margin + _heightArea - (func.Points[i + 1].Y + offsetY) * _stepY
+                                _margin + (func.Points[i].X + offset.X) * _stepX,
+                                _margin + _heightArea - (func.Points[i].Y + offset.Y) * _stepY,
+                                _margin + (func.Points[i + 1].X + offset.X) * _stepX,
+                                _margin + _heightArea - (func.Points[i + 1].Y + offset.Y) * _stepY
                             );
                         }
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Метод, который отрисовывает оси при условии, что массив графиков пуст, т.е. оси находятся слева
-        /// </summary>
-        /// <param name="canvas"></param>
-        private void DrawZeroAxis(Graphics canvas)
-        {
-            // ось X
-            canvas.DrawLine(
-                _defaultPencil,
-                _margin,
-                Height - _margin,
-                Width - _margin,
-                Height - _margin
-            );
-
-            // ось Y
-            canvas.DrawLine(
-                _defaultPencil,
-                _margin,
-                _margin,
-                _margin,
-                Height - _margin
-            );
         }
     }
 }

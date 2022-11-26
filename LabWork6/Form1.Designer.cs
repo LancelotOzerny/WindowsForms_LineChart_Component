@@ -33,6 +33,11 @@
             // 
             // grapher
             // 
+            this.grapher.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.grapher.AxisXName = "X Values";
+            this.grapher.AxisYName = "Y Values";
             this.grapher.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.grapher.ChartMargin = 20F;
             this.grapher.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);

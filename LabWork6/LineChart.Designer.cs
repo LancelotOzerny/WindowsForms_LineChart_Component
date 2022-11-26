@@ -36,10 +36,11 @@
             this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 24;
-            this.listBox1.Location = new System.Drawing.Point(87, 149);
+            this.listBox1.Location = new System.Drawing.Point(44, 77);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(210, 148);
+            this.listBox1.Size = new System.Drawing.Size(253, 220);
             this.listBox1.TabIndex = 0;
+            this.listBox1.Visible = false;
             // 
             // LineChart
             // 

@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LabWork6
@@ -21,30 +15,30 @@ namespace LabWork6
             Fx cos = new Fx();
             Fx myGrap = new Fx();
 
-            // Меняем их цвет
+            // Меняем цвет графиков
             sin.LineColor = Color.Blue;
             cos.LineColor = Color.Red;
             myGrap.LineColor = Color.Green;
 
-            // Меняем их ширину
+            // Меняем ширину графиков
             sin.LineWidth = 1;
             cos.LineWidth = 2;
             myGrap.LineWidth = 3;
 
-            // График синуса
-            for (float x = -10; x <= 10; x += 0.2f)
+            // Добавляем точки синуса
+            for (float x = -5f; x <= 5; x += 0.02f)
             {
-                sin.AddPoint(x, (float)Math.Sin(x));
+                sin.AddPoint(x, Math.Abs((float)Math.Sin(x)));
             }
 
-            // График косинуса
-            for (float x = -10; x <= 10; x += 0.2f)
+            // Добавляем точки косинуса
+            for (float x = -5; x <= 10; x += 0.02f)
             {
-                cos.AddPoint(x, (float)Math.Cos(x));
+                cos.AddPoint(x, Math.Abs((float)Math.Cos(x)));
             }
 
-            // График параболы
-            for (float x = -4; x <= 4; x += 0.1f)
+            // Добавляем точки параболы
+            for (float x = -5; x <= 1.2f; x += 0.01f)
             {
                 myGrap.AddPoint(x, (float)(x * x));
             }
@@ -53,6 +47,7 @@ namespace LabWork6
             grapher.AddFunction(sin);
             grapher.AddFunction(cos);
             grapher.AddFunction(myGrap);
+            grapher.AddFunction(new Fx()); // Пустой график
         }
     }
 }
