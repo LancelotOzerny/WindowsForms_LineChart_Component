@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace LabWork6
@@ -10,44 +9,33 @@ namespace LabWork6
         {
             InitializeComponent();
 
-            // Инициализация графиков
+            // Создаем функции
             Fx sin = new Fx();
             Fx cos = new Fx();
-            Fx myGrap = new Fx();
+            Fx giperbola = new Fx();
 
-            // Меняем цвет графиков
-            sin.LineColor = Color.Blue;
-            cos.LineColor = Color.Red;
-            myGrap.LineColor = Color.Green;
+            // Добавляем значения в графики
+            for (float x = -5; x < 5; x += 0.2f)
+            {
+                sin.AddPoint(x, (float)Math.Sin(x));
+                cos.AddPoint(x, (float)Math.Cos(x));
+                giperbola.AddPoint(x, (float)(x * x / 50));
+            }
 
-            // Меняем ширину графиков
-            sin.LineWidth = 1;
+            // Меняем толщину линий
+            sin.LineWidth = 2;
             cos.LineWidth = 2;
-            myGrap.LineWidth = 3;
+            giperbola.LineWidth = 2;
 
-            // Добавляем точки синуса
-            for (float x = -5f; x <= 5; x += 0.02f)
-            {
-                sin.AddPoint(x, Math.Abs((float)Math.Sin(x)));
-            }
+            // Меняем цвет линий
+            sin.LineColor = System.Drawing.Color.Red;
+            cos.LineColor = System.Drawing.Color.Green;
+            giperbola.LineColor = System.Drawing.Color.Blue;
 
-            // Добавляем точки косинуса
-            for (float x = -5; x <= 10; x += 0.02f)
-            {
-                cos.AddPoint(x, Math.Abs((float)Math.Cos(x)));
-            }
-
-            // Добавляем точки параболы
-            for (float x = -5; x <= 1.2f; x += 0.01f)
-            {
-                myGrap.AddPoint(x, (float)(x * x));
-            }
-
-            // Добавляем графики на экран
+            // Добавляем графики на отрисовку в компонент
             grapher.AddFunction(sin);
             grapher.AddFunction(cos);
-            grapher.AddFunction(myGrap);
-            grapher.AddFunction(new Fx()); // Пустой график
+            grapher.AddFunction(giperbola);
         }
     }
 }

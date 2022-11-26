@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LabWork6
@@ -167,17 +163,6 @@ namespace LabWork6
             
             offset.X = _startValues.X < 0 ? Math.Abs(_startValues.X) : -_startValues.X;
             offset.Y = _startValues.Y < 0 ? Math.Abs(_startValues.Y) : _startValues.Y;
-
-
-            listBox1.Items.Clear();
-            listBox1.Items.Add($"min X = {_startValues.X}");
-            listBox1.Items.Add($"max X = {_endValues.X}");
-            listBox1.Items.Add($"");
-            listBox1.Items.Add($"min Y = {_startValues.Y}");
-            listBox1.Items.Add($"max Y = {_endValues.Y}");
-            listBox1.Items.Add($"");
-            listBox1.Items.Add($"step X = {_stepX}");
-            listBox1.Items.Add($"step Y = {_stepY}");
 
             // ось X
             if (_startValues.Y <= 0)

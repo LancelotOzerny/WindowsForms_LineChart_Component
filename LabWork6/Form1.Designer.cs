@@ -39,7 +39,7 @@
             this.grapher.AxisXName = "X Values";
             this.grapher.AxisYName = "Y Values";
             this.grapher.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.grapher.ChartMargin = 20F;
+            this.grapher.ChartMargin = 10F;
             this.grapher.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.grapher.Location = new System.Drawing.Point(15, 15);
             this.grapher.Margin = new System.Windows.Forms.Padding(6);
